@@ -4,9 +4,10 @@ import Search from "@/app/ui/dashboard/search/search"
 import styles from "@/app/ui/dashboard/users/users.module.css"
 import Image from "next/image"
 import Link from "next/link"
-export default async function UsersPage() {
-
-  const users = await fetchUsers();
+export default async function UsersPage({ searchParams }) {
+  const q = searchParams?.q || "";
+  const page = searchParams?.page || 1;
+  const users = await fetchUsers(q, page);
 
   return (
     <div className={styles.container}>
@@ -33,7 +34,7 @@ export default async function UsersPage() {
               <td>
                 <div className={styles.user}>
                   <Image className={styles.userImage} src={user.img || "/noavatar.png"} alt={`User ${user.username}'s profile image`} width={40} height={40} />
-                  {user.name}
+                  {user.username}
                 </div>
               </td>
               <td>{user.email}</td>
