@@ -3,6 +3,7 @@ import { Product, User } from "./models";
 import { connectToDatabase } from "./utils";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
+import { signIn } from "../auth";
 
 export const addUser = async (formData) => {
     "use server"; //NEVER FORGET THIS LOL
@@ -126,4 +127,17 @@ export const updateProduct = async (formData) => {
 
     revalidatePath("/dashboard/products");
     redirect("/dashboard/products");
+}
+
+export const authenticate = async (formData) => {
+    "use server"; //NEVER FORGET THIS LOL
+    const { username, password } = Object.fromEntries(formData);
+
+    try {
+        await signIn("credentials", { username, password, redirect: false });
+    } catch(err) {
+        console.log(err)
+        throw err;
+    }
+    redirect('/dashboard'); //manually redirect
 }
