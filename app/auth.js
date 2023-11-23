@@ -42,5 +42,22 @@ export const {signIn, signOut, auth} = NextAuth({
                 }
             }
         })
-    ]
+    ],
+    callbacks: {
+        // we are adding this callbacks prop to add more data to our session user(token), which initially/default starts only with email
+        async jwt({token, user}) {
+            if(user) {
+                token.username = user.username;
+                token.img = user.img;
+            }
+            return token;
+        },
+        async session({session, token}) {
+            if(token) {
+                session.user.username = token.username;
+                session.user.img = token.img;
+            }
+            return session;
+        }
+    }
 })
