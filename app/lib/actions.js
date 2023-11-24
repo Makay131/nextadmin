@@ -1,3 +1,5 @@
+"use server"; //NEVER FORGET THIS LOL
+
 import { revalidatePath } from "next/cache";
 import { Product, User } from "./models";
 import { connectToDatabase } from "./utils";
@@ -6,7 +8,6 @@ import bcrypt from "bcrypt";
 import { signIn } from "../auth";
 
 export const addUser = async (formData) => {
-    "use server"; //NEVER FORGET THIS LOL
     const { username, email, password, phone, address, isActive, isAdmin } = Object.fromEntries(formData);
 
     try {
@@ -35,7 +36,6 @@ export const addUser = async (formData) => {
     redirect("/dashboard/users");
 }
 export const addProduct = async (formData) => {
-    "use server"; //NEVER FORGET THIS LOL
     const { title, desc, price, stock, color, size } = Object.fromEntries(formData);
 
     try {
@@ -55,7 +55,6 @@ export const addProduct = async (formData) => {
 }
 
 export const deleteUser = async (formData) => {
-    "use server"; //NEVER FORGET THIS LOL
     const { id } = Object.fromEntries(formData);
 
     try {
@@ -71,7 +70,6 @@ export const deleteUser = async (formData) => {
     revalidatePath("/dashboard/users");
 }
 export const deleteProduct = async (formData) => {
-    "use server"; //NEVER FORGET THIS LOL
     const { id } = Object.fromEntries(formData);
 
     try {
@@ -88,7 +86,6 @@ export const deleteProduct = async (formData) => {
 }
 
 export const updateUser = async (formData) => {
-    "use server"; //NEVER FORGET THIS LOL
     const { id, username, email, password, phone, address, isActive, isAdmin } = Object.fromEntries(formData);
 
     try {
@@ -109,7 +106,6 @@ export const updateUser = async (formData) => {
 }
 
 export const updateProduct = async (formData) => {
-    "use server"; //NEVER FORGET THIS LOL
     const { id, title, desc, price, stock, color, size } = Object.fromEntries(formData);
 
     try {
@@ -129,15 +125,14 @@ export const updateProduct = async (formData) => {
     redirect("/dashboard/products");
 }
 
-export const authenticate = async (formData) => {
-    "use server"; //NEVER FORGET THIS LOL
+export const authenticate = async (prevData, formData) => {
     const { username, password } = Object.fromEntries(formData);
 
     try {
         await signIn("credentials", { username, password, redirect: false });
     } catch(err) {
-        console.log(err)
-        throw err;
+        // return {error: "Wrong credentials"} ---> useState error handling
+        return "Wrong credentials" // --> useFormState error handling
     }
     redirect('/dashboard'); //manually redirect
 }
